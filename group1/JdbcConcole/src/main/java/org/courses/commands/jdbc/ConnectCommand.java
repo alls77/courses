@@ -4,7 +4,6 @@ import org.courses.commands.Command;
 import org.hibernate.SessionFactory;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
-import javax.sql.DataSource;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Connection;

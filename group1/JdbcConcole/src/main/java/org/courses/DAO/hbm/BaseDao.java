@@ -24,7 +24,7 @@ public abstract class BaseDao<TEntity, TKey> implements DAO<TEntity, TKey> {
 
     private void saveEntities(Session session, Collection<TEntity> entities) {
         for (TEntity entity : entities) {
-            session.save(entity);
+            session.saveOrUpdate(entity);
         }
     }
 

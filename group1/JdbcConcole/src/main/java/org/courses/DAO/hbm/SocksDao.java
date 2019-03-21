@@ -18,4 +18,5 @@ public class SocksDao extends BaseDao<Socks, Integer> {
     public Collection<Socks> find(String filter) {
         return null;
     }
+
 }

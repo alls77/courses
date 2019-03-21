@@ -14,7 +14,12 @@ public class Composition {
     private int percentage;
 
     @ManyToOne
+    @JoinColumn(name="material",foreignKey=@ForeignKey(name="material_FK"))
     private Material material;
+
+    @ManyToOne
+    @JoinColumn(name="socks",foreignKey=@ForeignKey(name="socks_FK"))
+    private Socks socks;
 
     public int getId() {
         return id;
@@ -38,5 +43,13 @@ public class Composition {
 
     public void setMaterial(Material material) {
         this.material = material;
+    }
+
+    public void setSocks(Socks socks) {
+        this.socks = socks;
+    }
+
+    public Socks getSocks() {
+        return socks;
     }
 }

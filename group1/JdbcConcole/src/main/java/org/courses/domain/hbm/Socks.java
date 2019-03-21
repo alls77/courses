@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "Manufacture")
+@Table(name = "Socks")
 public class Socks {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -23,20 +23,18 @@ public class Socks {
     private Color colour;
 
     @ManyToOne
-    private Manufacture manufacture;
+    @JoinColumn(name="type",foreignKey=@ForeignKey(name="type_FK"))
+    private Type type;
 
     @ManyToOne
-    private Type type;
+    @JoinColumn(name="manufacture",foreignKey=@ForeignKey(name="manufacture_FK"))
+    private Manufacture manufacture;
 
     @OneToMany
     private List<Composition> composition = new ArrayList<>();
 
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public double getSize() {
@@ -60,8 +58,7 @@ public class Socks {
     }
 
     public void setManufacture(Manufacture manufacture) {
-        this.manufacture = manufacture;
-    }
+        this.manufacture = manufacture; }
 
     public Type getType() {
         return type;

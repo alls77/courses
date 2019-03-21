@@ -58,7 +58,6 @@ public abstract class CrudCommand<TEntity, TKey> implements Command {
 
         readEntity(entity);
         dao.save(Arrays.asList(entity));
-        print(entity);
     }
 
     public void delete() {
