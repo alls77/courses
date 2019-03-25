@@ -23,14 +23,15 @@ public class Socks {
     private Color colour;
 
     @ManyToOne
-    @JoinColumn(name="type",foreignKey=@ForeignKey(name="type_FK"))
-    private Type type;
-
-    @ManyToOne
-    @JoinColumn(name="manufacture",foreignKey=@ForeignKey(name="manufacture_FK"))
+    @JoinColumn(name = "manufacture")
     private Manufacture manufacture;
 
-    @OneToMany
+    @ManyToOne
+    @JoinColumn(name = "type")
+    private Type type;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "socks")
     private List<Composition> composition = new ArrayList<>();
 
     public int getId() {
@@ -74,5 +75,10 @@ public class Socks {
 
     public void setComposition(List<Composition> composition) {
         this.composition = composition;
+    }
+
+    public void add(Composition c) {
+        composition.add(c);
+        c.setSocks(this);
     }
 }

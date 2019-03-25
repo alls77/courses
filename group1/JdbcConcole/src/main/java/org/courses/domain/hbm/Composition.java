@@ -14,11 +14,11 @@ public class Composition {
     private int percentage;
 
     @ManyToOne
-    @JoinColumn(name="material",foreignKey=@ForeignKey(name="material_FK"))
+    @JoinColumn(name = "material")
     private Material material;
 
     @ManyToOne
-    @JoinColumn(name="socks",foreignKey=@ForeignKey(name="socks_FK"))
+    @JoinColumn(name = "socks")
     private Socks socks;
 
     public int getId() {

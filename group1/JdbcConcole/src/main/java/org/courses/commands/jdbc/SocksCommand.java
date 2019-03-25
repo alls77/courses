@@ -1,6 +1,5 @@
 package org.courses.commands.jdbc;
 
-import org.apache.tools.ant.types.Commandline;
 import org.courses.DAO.DAO;
 import org.courses.SpringConfig;
 import org.courses.commands.Command;
@@ -18,89 +17,88 @@ import java.util.Scanner;
 
 public class SocksCommand extends CrudCommand<Socks, Integer> {
     private Scanner scanner;
-    static Map<String, Command> commandos;
+    DAO<Type, Integer> typeDao;
+    DAO<Material, Integer> materialDao;
+    DAO<Manufacture, Integer> manufactureDao;
+    TypeCommand typeCommand;
+    ManufactureCommand manufactureCommand;
 
-    public SocksCommand(DAO<Socks, Integer> dao, Scanner scanner) {
+    public SocksCommand(DAO<Socks, Integer> dao,
+                        DAO<Type, Integer> typeDao,
+                        DAO<Material, Integer> materialDao,
+                        DAO<Manufacture, Integer> manufactureDao,
+                        TypeCommand typeCommand,
+                        ManufactureCommand manufactureCommand,
+                        Scanner scanner) {
         super(dao, Socks.class);
         this.scanner = scanner;
+        this.typeDao = typeDao;
+        this.materialDao = materialDao;
+        this.manufactureDao = manufactureDao;
+        this.typeCommand = typeCommand;
+        this.manufactureCommand = manufactureCommand;
     }
+
 
     @Override
     protected void readEntity(Socks socks) {
         System.out.print("size: ");
         if (scanner.hasNext()) {
-            double size = Double.parseDouble(scanner.nextLine());
+            double size = scanner.nextDouble();
             socks.setSize(size);
         }
-        System.out.print("color: ");
+        System.out.print("colour: ");
         if (scanner.hasNext()) {
-            String color[] = Commandline.translateCommandline(scanner.nextLine());
-            int r = Integer.parseInt(color[0]);
-            int g = Integer.parseInt(color[1]);
-            int b = Integer.parseInt(color[2]);
-            socks.setColour(new Color(r,g,b));
+            int color = scanner.nextInt();
+            socks.setColour(new Color(color));
         }
 
-        getList("type");
-        System.out.println("type: ");
+        typeCommand.listAll();
+        System.out.print("type: ");
         if (scanner.hasNext()) {
-            Type t = new Type();
-            t.setId(Integer.parseInt(scanner.nextLine()));
-            socks.setType(t);
+            int type = scanner.nextInt();
+            socks.setType(typeDao.read(type));
         }
-        getList("manufacture");
+
+        manufactureCommand.listAll();
         System.out.print("manufacture: ");
         if (scanner.hasNext()) {
-            Manufacture m = new Manufacture();
-            m.setId(Integer.parseInt(scanner.nextLine()));
-            socks.setManufacture(m);
+            int manufacture = scanner.nextInt();
+            socks.setManufacture(manufactureDao.read(manufacture));
         }
 
-        System.out.print("composition: ");
+        System.out.println("composition: ");
         int percent = 0;
+        while (percent < 100) {
+            Composition composition = new Composition();
 
-        while(percent <= 100) {
-            Composition cs = new Composition();
-            getList("material");
             System.out.print("material: ");
             if (scanner.hasNext()) {
-                Material m = new Material();
-                m.setId(Integer.parseInt(scanner.nextLine()));
-                cs.setMaterial(m);
-                cs.setSocks(socks);
+                int id = scanner.nextInt();
+                composition.setMaterial(materialDao.read(id));
             }
-            System.out.print("percentage: ");
+            System.out.print("percantage: ");
             if (scanner.hasNext()) {
-                int p = Integer.parseInt(scanner.nextLine());
-                cs.setPercentage(p);
+                int percents = scanner.nextInt();
+                composition.setPercentage(percents);
+                percent += percents;
             }
-            percent += Integer.parseInt(scanner.nextLine());
-            socks.getComposition().add(cs);
+            socks.add(composition);
         }
     }
 
     @Override
     protected Integer convertId(String id) {
-        return null;
+        return Integer.parseInt(id);
     }
 
     @Override
     protected void print(Socks socks) {
-        System.out.println(String.format("Socks { id: %d, size: %s , color: %s , type: %s , manufacture: %s}",
+        System.out.print(String.format("Socks { id: %d, size: %s , color: %s }",
                 socks.getId(),
                 socks.getSize(),
-                socks.getColour().toString(),
-                socks.getType().getName(),
-                socks.getManufacture().getName()));
+                socks.getColour()));
+        typeCommand.print(socks.getType());
+        manufactureCommand.print(socks.getManufacture());
     }
-
-    private void getList(String table){
-        ApplicationContext context = new AnnotationConfigApplicationContext(SpringConfig.class);
-        commandos =(Map<String, Command>)context.getBean("commands");
-        Command command = commandos.get(table);
-
-        command.parse(new String[]{"list"});
-        command.execute();
-    }
-
 }

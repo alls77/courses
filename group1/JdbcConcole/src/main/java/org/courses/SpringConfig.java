@@ -118,7 +118,15 @@ public class SpringConfig {
     public CrudCommand<Manufacture, Integer> manufactureCommand(){return new ManufactureCommand(manufactureDao(), scanner());}
 
     @Bean
-    public CrudCommand<Socks, Integer> socksCommand(){return new SocksCommand(socksDao(), scanner());}
+    public CrudCommand<Socks, Integer> socksCommand() {
+        return new SocksCommand(socksDao(),
+                typeDao(),
+                materialDao(),
+                manufactureDao(),
+                (TypeCommand) typeCommand(),
+                (ManufactureCommand) manufactureCommand(),
+                scanner());
+    }
 
     @Bean
     public Map<String, Command> commands() {

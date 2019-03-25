@@ -1,5 +1,6 @@
 package org.courses.DAO.hbm;
 
+import org.apache.commons.validator.routines.DoubleValidator;
 import org.apache.commons.validator.routines.IntegerValidator;
 import org.courses.domain.hbm.Socks;
 import org.hibernate.Session;
@@ -15,8 +16,6 @@ public class SocksDao extends BaseDao<Socks, Integer> {
     }
 
     @Override
-    public Collection<Socks> find(String filter) {
-        return null;
-    }
+    public Collection<Socks> find(String filter) {return null; }
 
 }
